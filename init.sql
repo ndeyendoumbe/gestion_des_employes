@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS crud_db;
+USE crud_db;
+
+CREATE TABLE IF NOT EXISTS employes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100),
+    poste VARCHAR(100),
+    salaire DECIMAL(10,2)
+);
