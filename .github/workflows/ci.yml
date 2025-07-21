@@ -1,0 +1,43 @@
+
+name: CI & Docker Build
+
+on:
+  push:
+    branches:
+      - main   # La CI se lance à chaque push sur la branche main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️⃣ Récupérer le code du dépôt
+    - name: Checkout code
+      uses: actions/checkout@v3
+ # Lancer un conteneur basé sur CentOS/RedHat-like
+      - name: Build inside a CentOS container
+        run: |
+          docker run --rm centos:8 cat /etc/redhat-release
+
+    # 2️⃣ Vérifier la syntaxe PHP
+    - name: Vérifier la syntaxe PHP
+      run: |
+        find . -name "*.php" -print0 | xargs -0 -n1 php -l
+
+    # 3️⃣ Construire l’image Docker
+    - name: Build Docker image
+      run: |
+        docker build -t monapp:latest .
+
+    # 4️⃣ Se connecter à Docker Hub
+    - name: Login Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ ndeyendoumbesy }}
+        password: ${{ dockercompose}}
+
+    # 5️⃣ Pousser l’image sur Docker Hub
+    - name: Push Docker image
+      run: |
+        docker tag monapp:latest ${{ ndeyendoumbesy }}/monapp:latest
+        docker push ${{ dockercompose }}/monapp:latest
